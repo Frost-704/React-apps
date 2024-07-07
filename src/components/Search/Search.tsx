@@ -1,7 +1,8 @@
 import React, { ChangeEvent, Component } from 'react'
 import styles from './Search.module.scss'
+
 interface SearchProps {
-  query: string
+  onSearch: (query: string) => void
 }
 
 interface SearchState {
@@ -12,7 +13,7 @@ export default class Search extends Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
     super(props)
     this.state = {
-      query: localStorage.getItem('searchTerm') || '',
+      query: localStorage.getItem('query') || '',
     }
   }
   handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +22,7 @@ export default class Search extends Component<SearchProps, SearchState> {
   handleSearch = () => {
     const { query } = this.state
     localStorage.setItem('query', query)
+    this.props.onSearch(query.trim())
   }
   render() {
     return (
