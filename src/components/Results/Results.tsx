@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import styles from './Results.module.scss'
 import { Man } from '../../api/api'
 
