@@ -8,6 +8,7 @@ export interface Man {
   mass: string
   hair_color: string
   birth_year: string
+  url: string
 }
 
 interface BaseResponse {

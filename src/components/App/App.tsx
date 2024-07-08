@@ -60,16 +60,16 @@ class App extends Component<object, State> {
         <ErrorBoundary>
           <div className={styles.header}>
             <Search onSearch={this.handleSearch} />
+            <button onClick={this.handleClick}>Throw error</button>
           </div>
         </ErrorBoundary>
         <ErrorBoundary>
-          <div className={styles.footer}>
+          <div className={styles.body}>
             {this.state.isLoading ? (
               <img src={loader} alt="Loading..." />
             ) : (
               <Results response={this.state.results} />
             )}
-            <button onClick={this.handleClick}>Throw error</button>
           </div>
         </ErrorBoundary>
       </>
