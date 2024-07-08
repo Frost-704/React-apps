@@ -29,3 +29,18 @@ export const getAllPeople = async (): Promise<Man[]> => {
     throw error
   }
 }
+
+export const searchPeople = async (query: string): Promise<Man[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/?search=${query}`)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data: BaseResponse = await response.json()
+    console.log(data)
+    return data.results
+  } catch (error) {
+    console.error('getAllPeople API error:', error)
+    throw error
+  }
+}
