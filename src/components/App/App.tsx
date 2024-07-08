@@ -1,26 +1,38 @@
 import styles from './App.module.scss'
 import Search from '../Search/Search'
 import { Component } from 'react'
-import { getAllPeople, Man } from '../../api/api'
+import API, { Man } from '../../api/api'
 import Results from '../Results/Results'
+import loader from './../../assets/img/Spinner.svg'
 
-interface Response {
+interface State {
   results: Man[]
+  isLoading: boolean
 }
 
-class App extends Component<object, Response> {
+class App extends Component<object, State> {
   constructor(props: object) {
     super(props)
     this.state = {
       results: [],
+      isLoading: false,
     }
   }
   async componentDidMount(): Promise<void> {
-    const newState: Man[] = await getAllPeople()
-    this.setState({ results: newState })
+    try {
+      this.setState({ isLoading: true })
+      const newState: Man[] = await API.getAllPeople()
+      this.setState({ results: newState })
+    } catch (error) {
+      console.error("Can't load api:", error)
+    } finally {
+      this.setState({ isLoading: false })
+    }
   }
-  handleSearch = (query: string): void => {
-    console.log(query)
+  handleSearch = async (query: string): Promise<void> => {
+    const response = await API.searchPeople(query)
+    this.setState({ results: response })
+    console.log('🚀 ~ App ~ handleSearch= ~ response:', response)
   }
   render() {
     return (
@@ -29,7 +41,11 @@ class App extends Component<object, Response> {
           <Search onSearch={this.handleSearch} />
         </div>
         <div className={styles.footer}>
-          <Results response={this.state.results} />
+          {this.state.isLoading ? (
+            <img src={loader} alt="Loading..." />
+          ) : (
+            <Results response={this.state.results} />
+          )}
         </div>
       </>
     )

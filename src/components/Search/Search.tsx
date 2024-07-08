@@ -21,8 +21,8 @@ export default class Search extends Component<SearchProps, SearchState> {
   }
   handleSearch = () => {
     const { query } = this.state
-    localStorage.setItem('query', query)
-    this.props.onSearch(query.trim())
+    localStorage.setItem('query', query.trim().toLowerCase())
+    this.props.onSearch(query.trim().toLowerCase())
   }
   render() {
     return (
