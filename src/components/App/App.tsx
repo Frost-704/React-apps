@@ -42,12 +42,18 @@ class App extends Component<object, State> {
       this.setState({ isLoading: false })
     }
   }
+
+  handleClick = (): void => {
+    this.setState({ isError: true })
+    throw new Error('Custom error')
+  }
+
   render() {
     if (this.state.isError) {
       return (
         <div className={styles.error}>
           <img src={errorImg} alt="Error" />
-          <h1 className={styles.errorText}>Error in Api call</h1>
+          <h1 className={styles.errorText}>Something went wrong</h1>
         </div>
       )
     }
@@ -66,6 +72,7 @@ class App extends Component<object, State> {
             ) : (
               <Results response={this.state.results} />
             )}
+            <button onClick={this.handleClick}>Throw error</button>
           </div>
         </ErrorBoundary>
       </>
