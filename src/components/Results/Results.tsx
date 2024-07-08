@@ -9,6 +9,16 @@ interface ResultsProps {
 export default class Results extends Component<ResultsProps> {
   render() {
     const { response } = this.props
+
+    if (response.length === 0) {
+      return (
+        <div className={styles.error}>
+          <span className={styles.errorText}>
+            0 Results, try another search query
+          </span>
+        </div>
+      )
+    }
     return (
       <div className={styles['search-results']}>
         {response.map((person: Man, index: number) => (

@@ -10,7 +10,6 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary'
 interface State {
   results: Man[]
   isLoading: boolean
-  isEmptyResponse: boolean
   isError: boolean
 }
 
@@ -20,7 +19,6 @@ class App extends Component<object, State> {
     this.state = {
       results: [],
       isLoading: false,
-      isEmptyResponse: false,
       isError: false,
     }
   }
@@ -57,7 +55,6 @@ class App extends Component<object, State> {
         </div>
       )
     }
-
     return (
       <>
         <ErrorBoundary>

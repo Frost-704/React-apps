@@ -1,4 +1,4 @@
-import { ChangeEvent, Component } from 'react'
+import { ChangeEvent, Component, FormEvent } from 'react'
 import styles from './Search.module.scss'
 
 interface SearchProps {
@@ -16,25 +16,26 @@ export default class Search extends Component<SearchProps, SearchState> {
       query: localStorage.getItem('query') || '',
     }
   }
-  handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ query: event.target.value })
+  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    this.setState({ query: e.target.value })
   }
-  handleSearch = () => {
+  handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     const { query } = this.state
     localStorage.setItem('query', query.trim().toLowerCase())
     this.props.onSearch(query.trim().toLowerCase())
   }
   render() {
     return (
-      <div className={styles['search-component']}>
+      <form className={styles['search-component']} onSubmit={this.handleSearch}>
         <input
           type="text"
           value={this.state.query}
-          onInput={this.handleChange}
+          onChange={this.handleChange}
           placeholder="Search..."
         />
-        <button onClick={this.handleSearch}>Search</button>
-      </div>
+        <button type="submit">Search</button>
+      </form>
     )
   }
 }
