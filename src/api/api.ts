@@ -25,29 +25,13 @@ class API extends Component {
     this.baseUrl = baseUrl
   }
 
-  async getAllPeople(): Promise<Man[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const data: BaseResponse = await response.json()
-      console.log(data)
-      return data.results
-    } catch (error) {
-      console.error('getAllPeople API error:', error)
-      throw error
-    }
-  }
-
-  async searchPeople(query: string): Promise<Man[]> {
+  async searchPeople(query?: string): Promise<Man[]> {
     try {
       const response = await fetch(`${this.baseUrl}/?search=${query}`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       const data: BaseResponse = await response.json()
-      console.log(data)
       return data.results
     } catch (error) {
       console.error('searchPeople API error:', error)
