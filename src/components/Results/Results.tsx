@@ -38,7 +38,6 @@ export default class Results extends Component<ResultsProps> {
                 <div>Mass: {person.mass}</div>
                 <div>Hair Color: {person.hair_color}</div>
                 <div>Birth Year: {person.birth_year}</div>
-                <div>Url: {person.url}</div>
               </div>
             </div>
           )

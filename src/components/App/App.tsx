@@ -4,8 +4,6 @@ import { Component } from 'react'
 import API, { Man } from '../../api/api'
 import Results from '../Results/Results'
 import loader from './../../assets/img/Spinner.svg'
-import errorImg from './../../assets/img/Error_icon.svg'
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary'
 
 interface State {
   results: Man[]
@@ -43,35 +41,25 @@ class App extends Component<object, State> {
 
   handleClick = (): void => {
     this.setState({ isError: true })
-    throw new Error('Custom error')
   }
 
   render() {
     if (this.state.isError) {
-      return (
-        <div className={styles.error}>
-          <img src={errorImg} alt="Error" />
-          <h1 className={styles.errorText}>Something went wrong</h1>
-        </div>
-      )
+      throw new Error('Custom error')
     }
     return (
       <>
-        <ErrorBoundary>
-          <div className={styles.header}>
-            <Search onSearch={this.handleSearch} />
-            <button onClick={this.handleClick}>Throw error</button>
-          </div>
-        </ErrorBoundary>
-        <ErrorBoundary>
-          <div className={styles.body}>
-            {this.state.isLoading ? (
-              <img src={loader} alt="Loading..." />
-            ) : (
-              <Results response={this.state.results} />
-            )}
-          </div>
-        </ErrorBoundary>
+        <div className={styles.header}>
+          <Search onSearch={this.handleSearch} />
+          <button onClick={this.handleClick}>Throw error</button>
+        </div>
+        <div className={styles.body}>
+          {this.state.isLoading ? (
+            <img src={loader} alt="Loading..." />
+          ) : (
+            <Results response={this.state.results} />
+          )}
+        </div>
       </>
     )
   }
