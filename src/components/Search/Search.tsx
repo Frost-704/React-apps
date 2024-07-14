@@ -1,19 +1,19 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent } from 'react'
 import styles from './Search.module.scss'
+import useSearchQuery from '../../hooks/useSearchQuery'
 
 interface SearchProps {
   onSearch: (query: string) => void
 }
 
 const Search = ({ onSearch }: SearchProps) => {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useSearchQuery()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value)
   }
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    localStorage.setItem('query', query.trim().toLowerCase())
     onSearch(query.trim().toLowerCase())
   }
   return (

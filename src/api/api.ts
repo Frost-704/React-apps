@@ -7,7 +7,7 @@ export interface Man {
   url: string
 }
 
-interface ManResponse {
+export interface ManResponse {
   count: number
   next: null | string
   previous: null | string
@@ -25,7 +25,6 @@ export enum Endpoints {
 
 const API = (endpoint: Endpoints) => {
   const url = `https://swapi.dev/api/${endpoint}`
-
   const searchPeople = async (query?: string): Promise<ManResponse> => {
     try {
       const response = await fetch(`${url}/?search=${query}`)
