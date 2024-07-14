@@ -1,7 +1,3 @@
-import { Component } from 'react'
-
-const API_BASE_URL = 'https://swapi.dev/api/people/'
-
 export interface Man {
   name: string
   height: string
@@ -11,34 +7,40 @@ export interface Man {
   url: string
 }
 
-interface BaseResponse {
+interface ManResponse {
   count: number
   next: null | string
   previous: null | string
   results: Man[]
 }
 
-class API extends Component {
-  private baseUrl: string
+export enum Endpoints {
+  planets = 'planets',
+  spaceships = 'spaceships',
+  vehicles = 'vehicles',
+  people = 'people',
+  films = 'films',
+  species = 'species',
+}
 
-  constructor(baseUrl: string) {
-    super(baseUrl)
-    this.baseUrl = baseUrl
-  }
+const API = (endpoint: Endpoints) => {
+  const url = `https://swapi.dev/api/${endpoint}`
 
-  async searchPeople(query?: string): Promise<Man[]> {
+  const searchPeople = async (query?: string): Promise<ManResponse> => {
     try {
-      const response = await fetch(`${this.baseUrl}/?search=${query}`)
+      const response = await fetch(`${url}/?search=${query}`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      const data: BaseResponse = await response.json()
-      return data.results
+      const data: ManResponse = await response.json()
+      return data
     } catch (error) {
       console.error('searchPeople API error:', error)
       throw error
     }
   }
+
+  return { searchPeople }
 }
 
-export default new API(API_BASE_URL)
+export default API

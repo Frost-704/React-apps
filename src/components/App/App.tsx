@@ -1,7 +1,7 @@
 import styles from './App.module.scss'
 import Search from '../Search/Search'
-import { Component } from 'react'
-import API, { Man } from '../../api/api'
+import { useEffect, useState } from 'react'
+import API, { Endpoints, ManResponse, Man } from '../../api/api'
 import Results from '../Results/Results'
 import loader from './../../assets/img/Spinner.svg'
 
@@ -11,58 +11,57 @@ interface State {
   isError: boolean
 }
 
-class App extends Component<object, State> {
-  constructor(props: object) {
-    super(props)
-    this.state = {
-      results: [],
-      isLoading: false,
-      isError: false,
-    }
+const App = () => {
+  const initialState: State = {
+    results: [],
+    isLoading: false,
+    isError: false,
   }
-  async componentDidMount(): Promise<void> {
-    this.handleSearch()
-  }
-  handleSearch = async (query?: string): Promise<void> => {
+  const [state, setState] = useState(initialState)
+
+  useEffect(() => {
+    handleSearch()
+  }, [])
+
+  const handleSearch = async (query?: string): Promise<void> => {
     const searchQuery = query || localStorage.getItem('query')
     try {
-      this.setState({ isLoading: true })
-      const newState: Man[] = searchQuery
-        ? await API.searchPeople(searchQuery)
-        : await API.searchPeople('')
-      this.setState({ results: newState })
+      setState((prevState) => ({ ...prevState, isLoading: true }))
+      const newState: ManResponse = searchQuery
+        ? await API(Endpoints.people).searchPeople(searchQuery)
+        : await API(Endpoints.people).searchPeople('')
+      setState((prevState) => ({ ...prevState, results: newState.results }))
     } catch (error) {
-      this.setState({ isError: true })
+      setState((prevState) => ({ ...prevState, isError: true }))
       console.error("Can't load api:", error)
     } finally {
-      this.setState({ isLoading: false })
+      setState((prevState) => ({ ...prevState, isLoading: false }))
     }
   }
 
-  handleClick = (): void => {
-    this.setState({ isError: true })
+  const handleClick = (): void => {
+    setState((prevState) => ({ ...prevState, isError: true }))
   }
 
-  render() {
-    if (this.state.isError) {
-      throw new Error('Custom error')
-    }
-    return (
-      <>
-        <div className={styles.header}>
-          <Search onSearch={this.handleSearch} />
-          <button onClick={this.handleClick}>Throw error</button>
-        </div>
-        <div className={styles.body}>
-          {this.state.isLoading ? (
-            <img src={loader} alt="Loading..." />
-          ) : (
-            <Results response={this.state.results} />
-          )}
-        </div>
-      </>
-    )
+  if (state.isError) {
+    throw new Error('Custom error')
   }
+
+  return (
+    <>
+      <div className={styles.header}>
+        <Search onSearch={handleSearch} />
+        <button onClick={handleClick}>Throw error</button>
+      </div>
+      <div className={styles.body}>
+        {state.isLoading ? (
+          <img src={loader} alt="Loading..." />
+        ) : (
+          <Results response={state.results} />
+        )}
+      </div>
+    </>
+  )
 }
 
 export default App
