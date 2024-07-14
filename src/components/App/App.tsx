@@ -3,9 +3,9 @@ import Search from '../Search/Search'
 import { useCallback, useEffect, useState } from 'react'
 import API, { Endpoints, ManResponse } from '../../api/api'
 import Results from '../Results/Results'
-import useSearchQuery from '../../hooks/useSearchQuery'
 import Pagination from '../Pagination/Pagination'
 import Loader from '../Loader/Loader'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 interface State extends ManResponse {
   isLoading: boolean
@@ -22,18 +22,28 @@ const App = () => {
     isError: false,
   }
   const [state, setState] = useState<State>(initialState)
-  const [query] = useSearchQuery()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const { manId } = useParams()
+  const query = searchParams.get('query') || ''
+  const page = parseInt(searchParams.get('page') || '1', 10)
 
   const handleSearch = useCallback(
-    async (searchQuery?: string, page: number = 1): Promise<void> => {
+    async (searchQuery?: string, pageNumber: number = 1): Promise<void> => {
       const resultQuery = searchQuery ?? query
-      localStorage.setItem('query', resultQuery)
-      console.log(resultQuery)
+      setSearchParams({ query: resultQuery, page: pageNumber.toString() })
+      navigate(`/?query=${resultQuery}&page=${pageNumber}`)
+      console.log(
+        'Executing search with query:',
+        resultQuery,
+        'and page:',
+        pageNumber
+      )
       try {
         setState((prevState) => ({ ...prevState, isLoading: true }))
         const newState: ManResponse = await API(Endpoints.people).searchPeople(
           resultQuery,
-          page
+          pageNumber
         )
         console.log('🚀 ~ newState:', newState)
         setState({
@@ -50,12 +60,14 @@ const App = () => {
         console.error("Can't load api:", error)
       }
     },
-    [query]
+    [query, setSearchParams, navigate]
   )
 
   useEffect(() => {
-    handleSearch(query)
-  }, [handleSearch, query])
+    if (!manId) {
+      handleSearch(query, page)
+    }
+  }, [handleSearch, query, page, manId])
 
   const handleClick = (): void => {
     setState((prevState) => ({ ...prevState, isError: true }))
@@ -86,6 +98,7 @@ const App = () => {
               count={state.count}
               next={state.next}
               previous={state.previous}
+              onPageChange={(page: number) => handleSearch(query, page)}
             />
           </>
         )}
