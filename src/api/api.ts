@@ -3,7 +3,17 @@ export interface Man {
   height: string
   mass: string
   hair_color: string
+  skin_color: string
+  eye_color: string
   birth_year: string
+  gender: string
+  homeworld: string
+  films: string[]
+  species: string[]
+  vehicles: string[]
+  starships: string[]
+  created: string
+  edited: string
   url: string
 }
 
@@ -39,7 +49,20 @@ const API = (endpoint: Endpoints) => {
     }
   }
 
-  return { searchPeople }
+  const getPerson = async (id: string) => {
+    try {
+      const response = await fetch(`${url}/${id}`)
+      if (!response.ok) {
+        throw new Error(`getData error! status: ${response.status}`)
+      }
+      const data: Man = await response.json()
+      return data
+    } catch (error) {
+      console.error('getPerson API error:', error)
+      throw error
+    }
+  }
+  return { searchPeople, getPerson }
 }
 
 export default API
