@@ -19,13 +19,19 @@ const Layout = () => {
     setIsSidebarClosed(true)
   }
 
+  const handleMainClick = () => {
+    if (!isSidebarClosed) {
+      closeManCard()
+    }
+  }
+
   return (
     <div className={styles.layout}>
       <main
         className={
           isSidebarClosed ? styles.contentFull : styles.contentWithCard
         }
-        onClick={closeManCard}
+        onClick={handleMainClick}
       >
         <Outlet />
       </main>

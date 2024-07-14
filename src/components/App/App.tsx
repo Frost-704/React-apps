@@ -33,12 +33,6 @@ const App = () => {
       setQuery(resultQuery)
       setPage(pageNumber)
       navigate(`/?query=${resultQuery}&page=${pageNumber}`)
-      console.log(
-        'Executing search with query:',
-        resultQuery,
-        'and page:',
-        pageNumber
-      )
       try {
         setState((prevState) => ({ ...prevState, isLoading: true }))
         const newState: ManResponse = await API(Endpoints.people).searchPeople(
