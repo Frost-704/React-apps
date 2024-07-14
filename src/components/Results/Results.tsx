@@ -19,8 +19,8 @@ const Results = ({ results }: ManResponse) => {
         const match = person.url.match(/\d+/)
         const id = match ? match[0] : 0
         return (
-          <Link to={`/man/${id}`} className={styles.personLink}>
-            <div key={id} className={styles.person}>
+          <Link to={`/man/${id}`} key={id} className={styles.personLink}>
+            <div className={styles.person}>
               <div className={styles.personImage}>
                 <img
                   src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}

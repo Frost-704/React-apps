@@ -32,6 +32,10 @@ export enum Endpoints {
   films = 'films',
   species = 'species',
 }
+interface Name {
+  name: string
+  title?: string
+}
 
 const API = (endpoint: Endpoints) => {
   const url = `https://swapi.dev/api/${endpoint}`
@@ -62,7 +66,12 @@ const API = (endpoint: Endpoints) => {
       throw error
     }
   }
-  return { searchPeople, getPerson }
+
+  const fetchName = async (url: string): Promise<Name> => {
+    const response = await fetch(url)
+    return response.json()
+  }
+  return { searchPeople, getPerson, fetchName }
 }
 
 export default API

@@ -5,17 +5,23 @@ import './index.css'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPage from './components/ErrorPage/ErrorPage'
-import ManCard from './components/ManCard/ManCard'
+import Layout from './components/Layout/Layout'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Layout />,
     errorElement: <ErrorPage />,
-  },
-  {
-    path: 'man/:manId',
-    element: <ManCard />,
+    children: [
+      {
+        path: '',
+        element: <App />,
+      },
+      {
+        path: 'man/:manId',
+        element: <App />,
+      },
+    ],
   },
 ])
 
