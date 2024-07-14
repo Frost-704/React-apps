@@ -2,7 +2,7 @@ import styles from './Results.module.scss'
 import { Man, ManResponse } from '../../api/api'
 import { Link } from 'react-router-dom'
 
-const Results = ({ results }: ManResponse) => {
+const Results = ({ results = [] }: ManResponse) => {
   if (results.length === 0) {
     return (
       <div className={styles.error}>
@@ -15,7 +15,6 @@ const Results = ({ results }: ManResponse) => {
   return (
     <div className={styles['search-results']}>
       {results.map((person: Man) => {
-        console.log('🚀 ~ {results.map ~ person:', person)
         const match = person.url.match(/\d+/)
         const id = match ? match[0] : 0
         return (

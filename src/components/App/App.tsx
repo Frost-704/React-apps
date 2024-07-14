@@ -39,7 +39,6 @@ const App = () => {
           resultQuery,
           pageNumber
         )
-        console.log('🚀 ~ newState:', newState)
         setState({
           ...newState,
           isLoading: false,
