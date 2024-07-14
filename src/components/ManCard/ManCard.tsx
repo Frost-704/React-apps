@@ -2,8 +2,10 @@ import { useParams } from 'react-router-dom'
 import styles from './ManCard.module.scss'
 import API, { Endpoints, Man } from '../../api/api'
 import { useEffect, useState } from 'react'
+import Loader from '../Loader/Loader'
 
 export default function ManCard() {
+  const [loading, setloading] = useState<boolean>(false)
   const { manId } = useParams<{ manId: string }>()
   const [person, setPerson] = useState<Man | null>(null)
   const [homeworld, setHomeworld] = useState<string>('')
@@ -16,6 +18,7 @@ export default function ManCard() {
     const fetchPerson = async () => {
       if (manId) {
         try {
+          setloading(true)
           const response = await API(Endpoints.people).getPerson(manId)
           setPerson(response)
 
@@ -46,6 +49,8 @@ export default function ManCard() {
         } catch (error) {
           console.error('Failed to fetch person:', error)
           throw new Error("Can't find person")
+        } finally {
+          setloading(false)
         }
       }
     }
@@ -55,7 +60,9 @@ export default function ManCard() {
   if (!person) {
     return <div>Error: Can't find person</div>
   }
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className={styles.person}>
       <div className={styles.personImage}>
         <img

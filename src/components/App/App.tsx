@@ -3,9 +3,9 @@ import Search from '../Search/Search'
 import { useCallback, useEffect, useState } from 'react'
 import API, { Endpoints, ManResponse } from '../../api/api'
 import Results from '../Results/Results'
-import loader from './../../assets/img/Spinner.svg'
 import useSearchQuery from '../../hooks/useSearchQuery'
 import Pagination from '../Pagination/Pagination'
+import Loader from '../Loader/Loader'
 
 interface State extends ManResponse {
   isLoading: boolean
@@ -25,14 +25,15 @@ const App = () => {
   const [query] = useSearchQuery()
 
   const handleSearch = useCallback(
-    async (searchQuery?: string): Promise<void> => {
+    async (searchQuery?: string, page: number = 1): Promise<void> => {
       const resultQuery = searchQuery ?? query
       localStorage.setItem('query', resultQuery)
       console.log(resultQuery)
       try {
         setState((prevState) => ({ ...prevState, isLoading: true }))
         const newState: ManResponse = await API(Endpoints.people).searchPeople(
-          resultQuery
+          resultQuery,
+          page
         )
         console.log('🚀 ~ newState:', newState)
         setState({
@@ -72,7 +73,7 @@ const App = () => {
       </div>
       <div className={styles.body}>
         {state.isLoading ? (
-          <img src={loader} alt="Loading..." />
+          <Loader />
         ) : (
           <>
             <Results

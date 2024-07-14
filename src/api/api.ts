@@ -39,9 +39,12 @@ interface Name {
 
 const API = (endpoint: Endpoints) => {
   const url = `https://swapi.dev/api/${endpoint}`
-  const searchPeople = async (query?: string): Promise<ManResponse> => {
+  const searchPeople = async (
+    query?: string,
+    page: number = 1
+  ): Promise<ManResponse> => {
     try {
-      const response = await fetch(`${url}/?search=${query}`)
+      const response = await fetch(`${url}/?search=${query}&page=${page}`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
