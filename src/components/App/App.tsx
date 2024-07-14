@@ -5,7 +5,8 @@ import API, { Endpoints, ManResponse } from '../../api/api'
 import Results from '../Results/Results'
 import Pagination from '../Pagination/Pagination'
 import Loader from '../Loader/Loader'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import useSearchQuery from '../../hooks/useSearchQuery'
 
 interface State extends ManResponse {
   isLoading: boolean
@@ -22,16 +23,15 @@ const App = () => {
     isError: false,
   }
   const [state, setState] = useState<State>(initialState)
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [query, setQuery, page, setPage] = useSearchQuery()
   const navigate = useNavigate()
   const { manId } = useParams()
-  const query = searchParams.get('query') || ''
-  const page = parseInt(searchParams.get('page') || '1', 10)
 
   const handleSearch = useCallback(
     async (searchQuery?: string, pageNumber: number = 1): Promise<void> => {
       const resultQuery = searchQuery ?? query
-      setSearchParams({ query: resultQuery, page: pageNumber.toString() })
+      setQuery(resultQuery)
+      setPage(pageNumber)
       navigate(`/?query=${resultQuery}&page=${pageNumber}`)
       console.log(
         'Executing search with query:',
@@ -60,7 +60,7 @@ const App = () => {
         console.error("Can't load api:", error)
       }
     },
-    [query, setSearchParams, navigate]
+    [query, setQuery, setPage, navigate]
   )
 
   useEffect(() => {
