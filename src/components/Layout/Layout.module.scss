@@ -1,0 +1,24 @@
+.sidebar {
+  display: flex;
+  width: 20%;
+  padding: 15px;
+  background: #fff;
+  height: 100vh;
+  flex-direction: column;
+}
+.layout {
+  display: flex;
+}
+.hidden {
+  display: none;
+}
+.contentFull {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+.contentWithCard {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+}
